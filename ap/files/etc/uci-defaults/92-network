@@ -1,0 +1,16 @@
+set -x
+
+. /root/.env
+
+if [ -n "$OP_NETWORK_STATIC_IP" ]; then
+  config_load dhcp
+  uci del dhcp.lan.ra_slaac
+  uci commit dhcp
+
+  config_load network
+  uci set network.lan.ipaddr="$OP_NETWORK_STATIC_IP"
+  uci set network.lan.gateway="$OP_NETWORK_STATIC_GATEWAY"
+  uci commit network
+fi
+
+# TODO vlan
