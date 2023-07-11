@@ -1,7 +1,7 @@
 # openwrt-declarative
 
 ```sh
-export BUILD_TYPE=ap
+. ap/.env
 
 mkdir "$BUILD_TYPE/bin"
 
@@ -11,7 +11,7 @@ docker run --rm \
     -v "$(pwd)/common/files":"/builder/common-files" \
     -v "$(pwd)/$BUILD_TYPE/.env":"/builder/.env":ro \
     -v "$(pwd)/build.sh":"/builder/build.sh":ro \
-    openwrt/imagebuilder:<tag> \
+    "openwrt/imagebuilder:$BUILD_TAG" \
         bash /builder/build.sh
 
 docker run --rm \
@@ -21,7 +21,7 @@ docker run --rm \
     -v "$(pwd)/common/files":"/builder/common-files" \
     -v "$(pwd)/$BUILD_TYPE/.env":"/builder/.env":ro \
     -v "$(pwd)/build.sh":"/builder/build.sh":ro \
-    openwrt/imagebuilder:<tag> \
+    "openwrt/imagebuilder:$BUILD_TAG" \
         bash
 ```
 

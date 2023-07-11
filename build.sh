@@ -32,7 +32,7 @@ sed -i '/CONFIG_VMDK_IMAGES/ c\# CONFIG_VMDK_IMAGES is not set' .config
 sed -i '/CONFIG_VHDX_IMAGES/ c\# CONFIG_VHDX_IMAGES is not set' .config
 
 # base packages
-all_packages="luci luci-compat luci-lib-ipkg luci-app-opkg -dnsmasq dnsmasq-full luci-lib-base luci-app-firewall openssl-util"
+all_packages="-dnsmasq dnsmasq-full luci luci-compat luci-lib-ipkg luci-app-opkg luci-theme-bootstrap luci-lib-base luci-app-firewall openssl-util"
 
 # printenv | grep 'CONFIG_', export all config
 for config in $(printenv | grep '^CONFIG_'); do
@@ -40,9 +40,6 @@ for config in $(printenv | grep '^CONFIG_'); do
     config_value=$(echo $config | awk -F '=' '{print $2}')
     sed -i "/$config_name/ c\\$config_name=$config_value" .config
 done
-
-# theme
-all_packages="$all_packages luci-theme-bootstrap"
 
 make info
 if [ -z "$PROFILE" ]; then

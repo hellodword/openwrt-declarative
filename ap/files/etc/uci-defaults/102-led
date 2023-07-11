@@ -1,0 +1,26 @@
+set -x
+
+led_disable() {
+  local cfg="$1"
+
+  uci set system.$cfg.trigger='none'
+  uci set system.$cfg.default='0'
+}
+
+config_load system
+config_foreach led_disable led
+
+uci set system.power='led'
+uci set system.power.name='power'
+uci set system.power.sysfs='green:power'
+uci set system.power.trigger='none'
+uci set system.power.default='0'
+
+uci set system.wps='led'
+uci set system.wps.name='wps'
+uci set system.wps.sysfs='green:wps'
+uci set system.wps.trigger='none'
+uci set system.wps.default='0'
+
+uci commit system
+

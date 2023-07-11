@@ -1,5 +1,0 @@
-set -x
-
-. /root/.env
-
-# TODO

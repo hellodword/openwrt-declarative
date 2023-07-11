@@ -5,6 +5,7 @@ set -x
 if [ -n "$OP_NETWORK_STATIC_IP" ]; then
   config_load dhcp
   uci del dhcp.lan.ra_slaac
+  uci set dhcp.lan.ignore='1'
   uci commit dhcp
 
   config_load network

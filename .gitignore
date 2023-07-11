@@ -1,3 +1,5 @@
 .env
 root
 bin
+authorized_keys
+dropbear

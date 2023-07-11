@@ -1,0 +1,70 @@
+set -x
+
+. /root/.env
+
+wifi_enable_device() {
+  local cfg="$1"
+
+  uci set wireless.$cfg.disabled='0'
+}
+
+wifi_setup_interface() {
+  local cfg="$1"
+
+  uci set wireless.$cfg.ssid="$OP_WIRELESS_SSID"
+  if [ -n "$OP_WIRELESS_PASSWORD" -a "${#OP_WIRELESS_PASSWORD}" -ge 8 ]; then
+    uci set wireless.$cfg.key="$OP_WIRELESS_PASSWORD"
+    uci set wireless.$cfg.encryption="psk2"
+  else
+    uci set wireless.$cfg.encryption="none"
+  fi
+}
+
+wifi_roaming_device() {
+  local cfg="$1"
+
+  uci set wireless.$cfg.cell_density='0'
+}
+
+wifi_roaming_interface() {
+  local cfg="$1"
+
+  uci set wireless.$cfg.ieee80211r='1'
+  uci set wireless.$cfg.ft_over_ds='0'
+  uci set wireless.$cfg.ft_psk_generate_local='1'
+}
+
+wifi_set_guest() {
+  local cfg="$1"
+
+  if [ "$(uci get wireless.$cfg.band)" == "2g" ]; then
+    uci set wireless.guest_$cfg=wifi-iface
+    uci set wireless.guest_$cfg.device="$cfg"
+    uci set wireless.guest_$cfg.network="$(uci get wireless.default_$cfg.network)"
+    uci set wireless.guest_$cfg.mode='ap'
+    uci set wireless.guest_$cfg.guest='1'
+    uci set wireless.guest_$cfg.isolate='1'
+    uci set wireless.guest_$cfg.disabled='1'
+    uci set wireless.guest_$cfg.ssid="$OP_WIRELESS_GUEST_SSID"
+    uci set wireless.guest_$cfg.encryption='psk2'
+    uci set wireless.guest_$cfg.key="$OP_WIRELESS_GUEST_PASSWORD"
+  fi
+}
+
+config_load wireless
+config_foreach wifi_setup_interface wifi-iface
+if [ "$OP_WIRELESS_ROAMING" = "true" ]; then
+  config_foreach wifi_roaming_device wifi-device
+  config_foreach wifi_roaming_interface wifi-iface
+fi
+if [ ! -z "$OP_WIRELESS_GUEST_SSID" ]; then
+  config_foreach wifi_set_guest wifi-device
+  if [ "$OP_WIRELESS_GUEST_ROAMING" = "true" ]; then
+    config_foreach wifi_roaming_device wifi-device
+    config_foreach wifi_roaming_interface wifi-iface
+  fi
+fi
+
+config_foreach wifi_enable_device wifi-device
+uci commit wireless
+
