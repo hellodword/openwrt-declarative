@@ -1,0 +1,5 @@
+set -x
+
+# config_load network
+# uci set network.lan.dns="119.29.29.29 2402:4e00:: 223.5.5.5 2400:3200::1"
+# uci commit network

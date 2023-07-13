@@ -1,0 +1,25 @@
+set -x
+
+. /root/.env
+
+if [ -n "$OP_LAN_IP" ]; then
+  config_load network
+  uci set network.lan.ipaddr="$OP_LAN_IP"
+  uci commit network
+fi
+
+wifi_remove_non_guest_2_4g() {
+  local cfg="$1"
+
+  device="$(uci get wireless.$cfg.device)"
+
+  if [ "$(uci get wireless.$device.band)" == "2g" ]; then
+    if [[ ! "$cfg" =~ "guest_" ]]; then
+      uci del wireless."$cfg"
+    fi
+  fi
+}
+
+config_load wireless
+config_foreach wifi_remove_non_guest_2_4g wifi-iface
+uci commit wireless

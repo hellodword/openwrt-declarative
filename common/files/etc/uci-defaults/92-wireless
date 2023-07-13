@@ -2,7 +2,7 @@ set -x
 
 . /root/.env
 
-wifi_enable_device() {
+wifi_enable() {
   local cfg="$1"
 
   uci set wireless.$cfg.disabled='0'
@@ -44,7 +44,7 @@ wifi_set_guest() {
     uci set wireless.guest_$cfg.mode='ap'
     uci set wireless.guest_$cfg.guest='1'
     uci set wireless.guest_$cfg.isolate='1'
-    uci set wireless.guest_$cfg.disabled='1'
+    uci set wireless.guest_$cfg.disabled='0'
     uci set wireless.guest_$cfg.ssid="$OP_WIRELESS_GUEST_SSID"
     uci set wireless.guest_$cfg.encryption='psk2'
     uci set wireless.guest_$cfg.key="$OP_WIRELESS_GUEST_PASSWORD"
@@ -65,6 +65,6 @@ if [ ! -z "$OP_WIRELESS_GUEST_SSID" ]; then
   fi
 fi
 
-config_foreach wifi_enable_device wifi-device
+config_foreach wifi_enable wifi-device
+config_foreach wifi_enable wifi-iface
 uci commit wireless
-
