@@ -8,7 +8,7 @@ if [ -n "$OP_LAN_IP" ]; then
   uci commit network
 fi
 
-#####################################
+######################################
 wifi_remove_default_2_4g() {
   local cfg="$1"
 
@@ -25,7 +25,7 @@ wifi_remove_default_2_4g() {
 config_load wireless
 config_foreach wifi_remove_default_2_4g wifi-iface
 uci commit wireless
-#####################################
+######################################
 uci batch << EOI
 set network.switch_vlan_ap=switch_vlan
 set network.switch_vlan_ap.device='switch0'
@@ -138,40 +138,40 @@ config_load wireless
 uci set wireless.wireless_iot.network='iot'
 uci commit wireless
 
-# #################################
-# # guest 和 iot 会有一些冲突，导致无法 DHCP
-# uci batch << EOI
-# set firewall.zone_guest=zone
-# set firewall.zone_guest.name='guest'
-# set firewall.zone_guest.input='ACCEPT'
-# set firewall.zone_guest.output='ACCEPT'
-# set firewall.zone_guest.forward='REJECT'
-# set firewall.forwarding_guest=forwarding
-# set firewall.forwarding_guest.src='guest'
-# set firewall.forwarding_guest.dest='wan'
-# commit firewall
+######################################
+uci batch << EOI
+set firewall.zone_guest=zone
+set firewall.zone_guest.name='guest'
+set firewall.zone_guest.input='ACCEPT'
+set firewall.zone_guest.output='ACCEPT'
+set firewall.zone_guest.forward='REJECT'
+set firewall.forwarding_guest=forwarding
+set firewall.forwarding_guest.src='guest'
+set firewall.forwarding_guest.dest='wan'
+commit firewall
 
-# set dhcp.guest=dhcp
-# set dhcp.guest.interface='guest'
-# set dhcp.guest.start='100'
-# set dhcp.guest.limit='150'
-# set dhcp.guest.leasetime='12h'
-# commit dhcp
+set dhcp.guest=dhcp
+set dhcp.guest.interface='guest'
+set dhcp.guest.start='100'
+set dhcp.guest.limit='150'
+set dhcp.guest.leasetime='12h'
+commit dhcp
 
-# add_list firewall.zone_guest.network='guest'
-# commit firewall
+add_list firewall.zone_guest.network='guest'
+commit firewall
 
-# set network.bridge_vlan_guest='bridge-vlan'
-# set network.bridge_vlan_guest.device='br-lan'
-# set network.bridge_vlan_guest.vlan='30'
-# set network.guest=interface
-# set network.guest.proto='static'
-# set network.guest.device='br-lan.30'
-# set network.guest.ipaddr='$OP_LAN_IP_GUEST'
-# set network.guest.netmask='255.255.255.0'
-# set network.guest.type='bridge'
-# commit network
+set network.bridge_vlan_guest='bridge-vlan'
+set network.bridge_vlan_guest.device='br-lan'
+set network.bridge_vlan_guest.vlan='30'
+set network.guest=interface
+set network.guest.proto='static'
+set network.guest.device='br-lan.30'
+set network.guest.ipaddr='$OP_LAN_IP_GUEST'
+set network.guest.netmask='255.255.255.0'
+set network.guest.type='bridge'
+commit network
+EOI
 
-# set wireless.wireless_guest.network='guest'
-# commit wireless
-# EOI
+config_load wireless
+uci set wireless.wireless_guest.network='guest'
+uci commit wireless

@@ -74,13 +74,13 @@ if [ "$OP_WIRELESS_ROAMING" = "true" ]; then
   config_foreach wifi_roaming_device wifi-device
   config_foreach wifi_roaming_interface wifi-iface
 fi
-# if [ ! -z "$OP_WIRELESS_GUEST_SSID" ]; then
-#   config_foreach wifi_set_guest wifi-device
-#   if [ "$OP_WIRELESS_GUEST_ROAMING" = "true" ]; then
-#     config_foreach wifi_roaming_device wifi-device
-#     config_foreach wifi_roaming_interface wifi-iface
-#   fi
-# fi
+if [ ! -z "$OP_WIRELESS_GUEST_SSID" ]; then
+  config_foreach wifi_set_guest wifi-device
+  if [ "$OP_WIRELESS_GUEST_ROAMING" = "true" ]; then
+    config_foreach wifi_roaming_device wifi-device
+    config_foreach wifi_roaming_interface wifi-iface
+  fi
+fi
 if [ ! -z "$OP_WIRELESS_IOT_SSID" ]; then
   config_foreach wifi_set_iot wifi-device
 fi
