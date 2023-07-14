@@ -28,7 +28,7 @@
               │(Lan3)   ┌───────┐(wifi)                           │  └──────────────┘
               ├─────────┤routerB├─────────────────────────────────┤
               │         │openwrt│                                 │
-              │         │23.05  │                                 │
+              │         │23.05  │      [routers use same SSID]    │
               │         └───────┘                                 │
               │(wifi)                                             │
               ├───────────────────────────────────────────────────┤
@@ -62,7 +62,7 @@
 ```
 
 - ONT: 光猫
-- routerB/routerC: 目前是配置静态 IP，关闭 DHCP，当作 dumpAP
+- routerB/routerC: 目前是配置静态 IP，关闭 DHCP，配置相同 SSID，当作 dumpAP
 - Z1: 信任区，VLAN 10，IPv4+IPv6，不隔离，可以直接访问路由器或者光猫
   - VPN: 通过公网 IPv6 对外提供服务，包括但不限于 wireguard/tailscale/openvpn
 - Z2: 危险区，VLAN 20，仅 IPv4，局域网内互相隔离，禁止直接访问路由器或者光猫
@@ -74,3 +74,5 @@
 - https://www.youtube.com/playlist?list=PLjNJONm8Mjpf9g8xK0wJSFLIFrl8GMhVZ
 - https://www.chiphell.com/thread-2438393-1-1.html
 - https://openwrt.org/docs/guide-user/network/wifi/dumbap
+- https://iyzm.net/openwrt/3313.html
+- https://www.right.com.cn/forum/thread-8077577-1-1.html

@@ -2,9 +2,9 @@ set -x
 
 . /root/.env
 
-if [ -n "$OP_LAN_IP" ]; then
+if [ -n "$OP_LAN_IP_PREFIX" ]; then
   config_load network
-  uci set network.lan.ipaddr="$OP_LAN_IP"
+  uci set network.lan.ipaddr="${OP_LAN_IP_PREFIX}.1.1"
   uci commit network
 fi
 
@@ -86,7 +86,7 @@ set network.bridge_vlan_home.vlan='10'
 set network.home=interface
 set network.home.proto='static'
 set network.home.device='br-lan.10'
-set network.home.ipaddr='$OP_LAN_IP_HOME'
+set network.home.ipaddr='${OP_LAN_IP_PREFIX}.10.1'
 set network.home.netmask='255.255.255.0'
 set network.home.type='bridge'
 commit network
@@ -125,7 +125,7 @@ set network.bridge_vlan_iot.vlan='20'
 set network.iot=interface
 set network.iot.proto='static'
 set network.iot.device='br-lan.20'
-set network.iot.ipaddr='$OP_LAN_IP_IOT'
+set network.iot.ipaddr='${OP_LAN_IP_PREFIX}.20.1'
 set network.iot.netmask='255.255.255.0'
 set network.iot.type='bridge'
 commit network
@@ -166,7 +166,7 @@ set network.bridge_vlan_guest.vlan='30'
 set network.guest=interface
 set network.guest.proto='static'
 set network.guest.device='br-lan.30'
-set network.guest.ipaddr='$OP_LAN_IP_GUEST'
+set network.guest.ipaddr='${OP_LAN_IP_PREFIX}.30.1'
 set network.guest.netmask='255.255.255.0'
 set network.guest.type='bridge'
 commit network
