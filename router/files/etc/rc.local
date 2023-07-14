@@ -1,0 +1,9 @@
+#!/bin/sh
+
+uci set wireless.wireless_iot.network='iot'
+uci commit wireless
+
+ifdown iot
+ifup iot
+
+exit 0

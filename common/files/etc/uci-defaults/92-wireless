@@ -38,16 +38,33 @@ wifi_set_guest() {
   local cfg="$1"
 
   if [ "$(uci get wireless.$cfg.band)" == "2g" ]; then
-    uci set wireless.guest_$cfg=wifi-iface
-    uci set wireless.guest_$cfg.device="$cfg"
-    uci set wireless.guest_$cfg.network="$(uci get wireless.default_$cfg.network)"
-    uci set wireless.guest_$cfg.mode='ap'
-    uci set wireless.guest_$cfg.guest='1'
-    uci set wireless.guest_$cfg.isolate='1'
-    uci set wireless.guest_$cfg.disabled='0'
-    uci set wireless.guest_$cfg.ssid="$OP_WIRELESS_GUEST_SSID"
-    uci set wireless.guest_$cfg.encryption='psk2'
-    uci set wireless.guest_$cfg.key="$OP_WIRELESS_GUEST_PASSWORD"
+    uci set wireless.wireless_guest=wifi-iface
+    uci set wireless.wireless_guest.device="$cfg"
+    uci set wireless.wireless_guest.network="$(uci get wireless.default_$cfg.network)"
+    uci set wireless.wireless_guest.mode='ap'
+    uci set wireless.wireless_guest.guest='1'
+    uci set wireless.wireless_guest.isolate='0'
+    uci set wireless.wireless_guest.disabled='0'
+    uci set wireless.wireless_guest.ssid="$OP_WIRELESS_GUEST_SSID"
+    uci set wireless.wireless_guest.encryption='psk2'
+    uci set wireless.wireless_guest.key="$OP_WIRELESS_GUEST_PASSWORD"
+  fi
+}
+
+wifi_set_iot() {
+  local cfg="$1"
+
+  if [ "$(uci get wireless.$cfg.band)" == "2g" ]; then
+    uci set wireless.wireless_iot=wifi-iface
+    uci set wireless.wireless_iot.device="$cfg"
+    uci set wireless.wireless_iot.network="$(uci get wireless.default_$cfg.network)"
+    uci set wireless.wireless_iot.mode='ap'
+    uci set wireless.wireless_iot.guest='1'
+    uci set wireless.wireless_iot.isolate='1'
+    uci set wireless.wireless_iot.disabled='0'
+    uci set wireless.wireless_iot.ssid="$OP_WIRELESS_IOT_SSID"
+    uci set wireless.wireless_iot.encryption='psk2'
+    uci set wireless.wireless_iot.key="$OP_WIRELESS_IOT_PASSWORD"
   fi
 }
 
@@ -57,12 +74,15 @@ if [ "$OP_WIRELESS_ROAMING" = "true" ]; then
   config_foreach wifi_roaming_device wifi-device
   config_foreach wifi_roaming_interface wifi-iface
 fi
-if [ ! -z "$OP_WIRELESS_GUEST_SSID" ]; then
-  config_foreach wifi_set_guest wifi-device
-  if [ "$OP_WIRELESS_GUEST_ROAMING" = "true" ]; then
-    config_foreach wifi_roaming_device wifi-device
-    config_foreach wifi_roaming_interface wifi-iface
-  fi
+# if [ ! -z "$OP_WIRELESS_GUEST_SSID" ]; then
+#   config_foreach wifi_set_guest wifi-device
+#   if [ "$OP_WIRELESS_GUEST_ROAMING" = "true" ]; then
+#     config_foreach wifi_roaming_device wifi-device
+#     config_foreach wifi_roaming_interface wifi-iface
+#   fi
+# fi
+if [ ! -z "$OP_WIRELESS_IOT_SSID" ]; then
+  config_foreach wifi_set_iot wifi-device
 fi
 
 config_foreach wifi_enable wifi-device
