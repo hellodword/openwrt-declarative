@@ -34,6 +34,8 @@ sed -i '/CONFIG_VHDX_IMAGES/ c\# CONFIG_VHDX_IMAGES is not set' .config
 # base packages
 all_packages="-dnsmasq dnsmasq-full luci luci-compat luci-lib-ipkg luci-app-opkg luci-theme-bootstrap luci-lib-base luci-app-firewall openssl-util"
 
+# TODO remove luci/dropbear/dnsmasq/firewall/dhcp packages from dumpap
+
 # printenv | grep 'CONFIG_', export all config
 for config in $(printenv | grep '^CONFIG_'); do
     config_name=$(echo $config | awk -F '=' '{print $1}')

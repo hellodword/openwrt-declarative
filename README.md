@@ -27,7 +27,7 @@ docker run --rm \
         bash
 ```
 
-- [ap](./ap): 双频，单网口，OpenWrt 默认没有 wan 口，没有 switch
+- [ap](./ap): 双频，单网口，OpenWrt 默认没有 wan 口、没有 switch
 - [router](./router): 双频，主路由，五网口
 - [travel](./travel): 双频，三网口
 - [onu](./onu): 光猫

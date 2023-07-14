@@ -1,5 +1,8 @@
 set -x
 
+# 光猫 WAN 侧前缀的获取方式为 DHCPv6-PD，通过通告方式获取 IP
+# 光猫 LAN 侧配置了前缀来源，配置了 DNS 为腾讯和阿里的，开启了 DHCPv6 Server 和路由通告，分配方式为 SLAAC，启用了 ULA
+
 ######################################
 uci batch << EOI
 del network.globals.ula_prefix
