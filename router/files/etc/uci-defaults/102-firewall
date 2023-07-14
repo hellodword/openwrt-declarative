@@ -1,0 +1,78 @@
+set -x
+
+. /root/.env
+
+######################################
+uci batch << EOI
+set firewall.drop_openwrt_admin_iot=rule
+set firewall.drop_openwrt_admin_iot.name='drop_openwrt_admin_iot'
+set firewall.drop_openwrt_admin_iot.src='iot'
+add_list firewall.drop_openwrt_admin_iot.dest_ip='${OP_LAN_IP_PREFIX}.1.1'
+add_list firewall.drop_openwrt_admin_iot.dest_ip='${OP_LAN_IP_PREFIX}.10.1'
+add_list firewall.drop_openwrt_admin_iot.dest_ip='${OP_LAN_IP_PREFIX}.20.1'
+add_list firewall.drop_openwrt_admin_iot.dest_ip='${OP_LAN_IP_PREFIX}.30.1'
+set firewall.drop_openwrt_admin_iot.dest_port='22 80 443'
+set firewall.drop_openwrt_admin_iot.target='DROP'
+add_list firewall.drop_openwrt_admin_iot.proto='tcp'
+commit firewall
+EOI
+
+uci batch << EOI
+set firewall.drop_openwrt_admin_guest=rule
+set firewall.drop_openwrt_admin_guest.name='drop_openwrt_admin_guest'
+set firewall.drop_openwrt_admin_guest.src='guest'
+add_list firewall.drop_openwrt_admin_guest.dest_ip='${OP_LAN_IP_PREFIX}.1.1'
+add_list firewall.drop_openwrt_admin_guest.dest_ip='${OP_LAN_IP_PREFIX}.10.1'
+add_list firewall.drop_openwrt_admin_guest.dest_ip='${OP_LAN_IP_PREFIX}.20.1'
+add_list firewall.drop_openwrt_admin_guest.dest_ip='${OP_LAN_IP_PREFIX}.30.1'
+set firewall.drop_openwrt_admin_guest.dest_port='22 80 443'
+set firewall.drop_openwrt_admin_guest.target='DROP'
+add_list firewall.drop_openwrt_admin_guest.proto='tcp'
+commit firewall
+EOI
+
+uci batch << EOI
+set firewall.drop_ont_admin_iot=rule
+set firewall.drop_ont_admin_iot.name='drop_ont_admin_iot'
+set firewall.drop_ont_admin_iot.src='iot'
+set firewall.drop_ont_admin_iot.dest='*'
+add_list firewall.drop_ont_admin_iot.dest_ip='192.168.0.0/16'
+set firewall.drop_ont_admin_iot.dest_port='22 80 443'
+set firewall.drop_ont_admin_iot.target='DROP'
+add_list firewall.drop_ont_admin_iot.proto='tcp'
+commit firewall
+EOI
+
+uci batch << EOI
+set firewall.drop_ont_admin_guest=rule
+set firewall.drop_ont_admin_guest.name='drop_ont_admin_guest'
+set firewall.drop_ont_admin_guest.src='guest'
+set firewall.drop_ont_admin_guest.dest='*'
+add_list firewall.drop_ont_admin_guest.dest_ip='192.168.0.0/16'
+set firewall.drop_ont_admin_guest.dest_port='22 80 443'
+set firewall.drop_ont_admin_guest.target='DROP'
+add_list firewall.drop_ont_admin_guest.proto='tcp'
+commit firewall
+EOI
+
+uci batch << EOI
+set firewall.drop_ipv6_iot=rule
+set firewall.drop_ipv6_iot.name='drop_ipv6_iot'
+set firewall.drop_ipv6_iot.src='iot'
+set firewall.drop_ipv6_iot.dest='*'
+set firewall.drop_ipv6_iot.target='DROP'
+add_list firewall.drop_ipv6_iot.proto='all'
+set firewall.drop_ipv6_iot.family='ipv6'
+commit firewall
+EOI
+
+uci batch << EOI
+set firewall.drop_ipv6_guest=rule
+set firewall.drop_ipv6_guest.name='drop_ipv6_guest'
+set firewall.drop_ipv6_guest.src='guest'
+set firewall.drop_ipv6_guest.dest='*'
+set firewall.drop_ipv6_guest.target='DROP'
+add_list firewall.drop_ipv6_guest.proto='all'
+set firewall.drop_ipv6_guest.family='ipv6'
+commit firewall
+EOI
