@@ -11,7 +11,11 @@ if [ -n "$OP_NETWORK_STATIC_IP" ]; then
   config_load network
   uci set network.lan.ipaddr="$OP_NETWORK_STATIC_IP"
   uci set network.lan.gateway="$OP_NETWORK_STATIC_GATEWAY"
+  # uci add_list network.lan.dns="$OP_NETWORK_STATIC_GATEWAY"
   uci commit network
-fi
 
-# TODO vlan
+  # dumpap
+  rm /etc/init.d/odhcpd
+  rm /etc/init.d/firewall
+  rm /etc/init.d/dnsmasq
+fi
