@@ -41,9 +41,12 @@ for config in $(printenv | grep '^CONFIG_'); do
     sed -i "/$config_name/ c\\$config_name=$config_value" .config
 done
 
+
+EXTRA_IMAGE_NAME="$(date +%Y-%m-%d-%H-%M-%S)"
+
 make info
 if [ -z "$PROFILE" ]; then
-    make image PACKAGES="$all_packages" FILES="files"
+    make image PACKAGES="$all_packages" FILES="files" EXTRA_IMAGE_NAME="$EXTRA_IMAGE_NAME"
 else
-    make image PROFILE="$PROFILE" PACKAGES="$all_packages" FILES="files"
+    make image PROFILE="$PROFILE" PACKAGES="$all_packages" FILES="files" EXTRA_IMAGE_NAME="$EXTRA_IMAGE_NAME"
 fi
