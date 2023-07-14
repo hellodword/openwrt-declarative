@@ -1,0 +1,19 @@
+set -x
+
+######################################
+uci batch << EOI
+del network.globals.ula_prefix
+commit network
+
+set dhcp.lan.dhcpv6='relay'
+set dhcp.lan.ra='relay'
+set dhcp.lan.ndp='relay'
+set dhcp.wan6=dhcp
+set dhcp.wan6.interface='wan6'
+set dhcp.wan6.master='1'
+set dhcp.wan6.ignore='1'
+set dhcp.wan6.dhcpv6='relay'
+set dhcp.wan6.ra='relay'
+set dhcp.wan6.ndp='relay'
+commit dhcp
+EOI
