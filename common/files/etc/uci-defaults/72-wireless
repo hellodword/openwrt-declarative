@@ -82,7 +82,7 @@ config_foreach wifi_setup_default wifi-iface "$OP_WIRELESS_SSID" "$OP_WIRELESS_P
 
 if [ ! -z "$OP_WIRELESS_GUEST_SSID" ]; then
   config_foreach wifi_set_custom wifi-device "$OP_WIRELESS_GUEST_SSID" "$OP_WIRELESS_GUEST_PASSWORD" "guest" "2g" "0" "$OP_WIRELESS_GUEST_ROAMING"
-  # config_foreach wifi_set_custom wifi-device "$OP_WIRELESS_GUEST_SSID" "$OP_WIRELESS_GUEST_PASSWORD" "guest" "5g" "0" "$OP_WIRELESS_GUEST_ROAMING"
+  config_foreach wifi_set_custom wifi-device "$OP_WIRELESS_GUEST_SSID" "$OP_WIRELESS_GUEST_PASSWORD" "guest" "5g" "0" "$OP_WIRELESS_GUEST_ROAMING"
 fi
 
 if [ ! -z "$OP_WIRELESS_IOT_SSID" ]; then

@@ -9,91 +9,47 @@ if [ -n "$OP_LAN_IP_PREFIX" ]; then
 fi
 
 ######################################
-wifi_remove_default_2g() {
-  local cfg="$1"
-
-  device="$(uci get wireless.$cfg.device)"
-
-  if [ "$cfg" == "2g" ]; then
-    uci del wireless."default_$cfg"
-  fi
-}
-
-
-config_load wireless
-config_foreach wifi_remove_default_2g wifi-device
-uci commit wireless
-######################################
 uci batch << EOI
-set network.switch_vlan_ap=switch_vlan
-set network.switch_vlan_ap.device='switch0'
-set network.switch_vlan_ap.vlan='3'
-set network.@switch_vlan[0].ports='6t 4 3 2 1'
+set network.switch_vlan_ap.description='LAN and home wifi'
+set network.@switch_vlan[0].vlan='1'
 set network.@switch_vlan[0].vid='1'
-set network.@switch_vlan[1].ports='0t 5'
+set network.@switch_vlan[0].ports='3 4 6t'
+
+set network.@switch_vlan[1].vlan='2'
 set network.@switch_vlan[1].vid='2'
-set network.@switch_vlan[0].ports='6t 2 1'
+set network.@switch_vlan[1].ports='0t 5'
+
+set network.switch_vlan_guest.description='guest'
+set network.switch_vlan_guest=switch_vlan
+set network.switch_vlan_guest.device='switch0'
+set network.switch_vlan_guest.vlan='3'
+set network.switch_vlan_guest.vid='3'
+set network.switch_vlan_guest.ports='6t'
+
+set network.switch_vlan_iot.description='iot'
+set network.switch_vlan_iot=switch_vlan
+set network.switch_vlan_iot.device='switch0'
+set network.switch_vlan_iot.vlan='4'
+set network.switch_vlan_iot.vid='4'
+set network.switch_vlan_iot.ports='1 2 6t'
+
 commit network
-set network.switch_vlan_ap.ports='6t 4 3'
-set network.switch_vlan_ap.vid='3'
-set network.switch_vlan_ap.description='VLAN for AP'
+
+set network.br_guest=device
+set network.br_guest.type='bridge'
+set network.br_guest.name='br-guest'
+set network.br_guest.ports='eth1.3'
 commit network
 
-del dhcp.lan.ra_slaac
-commit dhcp
-
-set network.lan.device='eth1.3'
+set network.br_iot=device
+set network.br_iot.type='bridge'
+set network.br_iot.name='br-iot'
+set network.br_iot.ports='eth1.4'
 commit network
-EOI
 
-######################################
-wifi_set_home_5g() {
-  local cfg="$1"
-
-  device="$(uci get wireless.$cfg.device)"
-
-  if [ "$(uci get wireless.$device.band)" == "5g" ]; then
-    uci set wireless."$cfg".network='home'
-  fi
-}
-
-uci batch << EOI
-set firewall.zone_home=zone
-set firewall.zone_home.name='home'
-set firewall.zone_home.input='ACCEPT'
-set firewall.zone_home.output='ACCEPT'
-set firewall.zone_home.forward='REJECT'
-set firewall.forwarding_home=forwarding
-set firewall.forwarding_home.src='home'
-set firewall.forwarding_home.dest='wan'
-commit firewall
-
-set dhcp.home=dhcp
-set dhcp.home.interface='home'
-set dhcp.home.start='100'
-set dhcp.home.limit='150'
-set dhcp.home.leasetime='12h'
-commit dhcp
-
-add_list firewall.zone_home.network='home'
-commit firewall
-
-set network.bridge_vlan_home='bridge-vlan'
-set network.bridge_vlan_home.device='br-lan'
-set network.bridge_vlan_home.vlan='10'
-set network.home=interface
-set network.home.proto='static'
-set network.home.device='br-lan.10'
-set network.home.ipaddr='${OP_LAN_IP_PREFIX}.10.1'
-set network.home.netmask='255.255.255.0'
-set network.home.type='bridge'
+set network.lan.device='br-lan'
 commit network
 EOI
-
-
-config_load wireless
-config_foreach wifi_set_home_5g wifi-iface
-uci commit wireless
 
 ######################################
 uci batch << EOI
@@ -117,23 +73,16 @@ commit dhcp
 add_list firewall.zone_iot.network='iot'
 commit firewall
 
-set network.bridge_vlan_iot='bridge-vlan'
-set network.bridge_vlan_iot.device='br-lan'
-set network.bridge_vlan_iot.vlan='20'
 set network.iot=interface
 set network.iot.proto='static'
-set network.iot.device='br-lan.20'
+set network.iot.device='br-iot'
 set network.iot.ipaddr='${OP_LAN_IP_PREFIX}.20.1'
 set network.iot.netmask='255.255.255.0'
-set network.iot.type='bridge'
 commit network
 EOI
 
-# 并没有生效，network 还是空，但设置 home 生效了，所以暂且用 rc.local 来修复
 config_load wireless
-# uci del wireless.wireless_iot.isolate
-# uci del wireless.wireless_iot.guest
-uci set wireless.wireless_iot.network='iot'
+uci set wireless.wireless_iot_2g.network='iot'
 uci commit wireless
 
 ######################################
@@ -158,18 +107,15 @@ commit dhcp
 add_list firewall.zone_guest.network='guest'
 commit firewall
 
-set network.bridge_vlan_guest='bridge-vlan'
-set network.bridge_vlan_guest.device='br-lan'
-set network.bridge_vlan_guest.vlan='30'
 set network.guest=interface
 set network.guest.proto='static'
-set network.guest.device='br-lan.30'
+set network.guest.device='br-guest'
 set network.guest.ipaddr='${OP_LAN_IP_PREFIX}.30.1'
 set network.guest.netmask='255.255.255.0'
-set network.guest.type='bridge'
 commit network
 EOI
 
 config_load wireless
-uci set wireless.wireless_guest.network='guest'
+uci set wireless.wireless_guest_2g.network='guest'
+uci set wireless.wireless_guest_5g.network='guest'
 uci commit wireless
