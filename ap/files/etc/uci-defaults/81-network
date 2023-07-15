@@ -2,20 +2,42 @@ set -x
 
 . /root/.env
 
-if [ -n "$OP_DUMP_AP" ]; then
-  config_load dhcp
-  uci del dhcp.lan.ra_slaac
-  uci set dhcp.lan.ignore='1'
-  uci commit dhcp
 
-  config_load network
-  uci set network.lan.ipaddr="${OP_LAN_IP_PREFIX}.1.${OP_DUMP_AP}"
-  uci set network.lan.gateway="${OP_LAN_IP_PREFIX}.1.1"
-  # uci add_list network.lan.dns="${OP_LAN_IP_PREFIX}.1.1"
-  uci commit network
+config_load dhcp
+uci del dhcp.lan.ra_slaac
+uci set dhcp.lan.ignore='1'
+uci commit dhcp
 
-  # # dumpap
-  # rm -f /etc/init.d/odhcpd
-  # rm -f /etc/init.d/firewall
-  # rm -f /etc/init.d/dnsmasq
-fi
+config_load network
+uci set network.lan.ipaddr="${OP_LAN_IP_PREFIX}.1.${OP_DUMP_AP}"
+uci set network.lan.gateway="${OP_LAN_IP_PREFIX}.1.1"
+# uci add_list network.lan.dns="${OP_LAN_IP_PREFIX}.1.1"
+uci commit network
+
+# # not working
+# uci batch << EOI
+# set network.bridge_vlan_home='bridge-vlan'
+# set network.bridge_vlan_home.device='br-lan'
+# set network.bridge_vlan_home.vlan='1'
+
+# set network.lan.device='br-lan.1'
+# set network.lan.type='bridge'
+# commit network
+
+# set network.bridge_vlan_guest='bridge-vlan'
+# set network.bridge_vlan_guest.device='br-lan'
+# set network.bridge_vlan_guest.vlan='3'
+
+# set network.guest=interface
+# set network.guest.proto='static'
+# set network.guest.device='br-lan.3'
+# set network.guest.ipaddr='${OP_LAN_IP_PREFIX}.3.${OP_DUMP_AP}'
+# set network.guest.netmask='255.255.255.0'
+# set network.guest.gateway='${OP_LAN_IP_PREFIX}.3.1'
+# set network.guest.type='bridge'
+# commit network
+
+# set wireless.wireless_guest_2g.network='guest'
+# set wireless.wireless_guest_5g.network='guest'
+# commit wireless
+# EOI
