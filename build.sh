@@ -66,6 +66,10 @@ else
     # all_packages="$all_packages -udropbear"
 fi
 
+if [ -n "${OP_PACKAGES}" ]; then
+    all_packages="$all_packages $OP_PACKAGES"
+fi
+
 # printenv | grep 'CONFIG_', export all config
 for config in $(printenv | grep '^CONFIG_'); do
     config_name=$(echo $config | awk -F '=' '{print $1}')
