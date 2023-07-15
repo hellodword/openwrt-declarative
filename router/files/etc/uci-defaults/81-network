@@ -76,7 +76,7 @@ commit firewall
 set network.iot=interface
 set network.iot.proto='static'
 set network.iot.device='br-iot'
-set network.iot.ipaddr='${OP_LAN_IP_PREFIX}.20.1'
+set network.iot.ipaddr='${OP_LAN_IP_PREFIX}.4.1'
 set network.iot.netmask='255.255.255.0'
 commit network
 EOI
@@ -110,7 +110,7 @@ commit firewall
 set network.guest=interface
 set network.guest.proto='static'
 set network.guest.device='br-guest'
-set network.guest.ipaddr='${OP_LAN_IP_PREFIX}.30.1'
+set network.guest.ipaddr='${OP_LAN_IP_PREFIX}.3.1'
 set network.guest.netmask='255.255.255.0'
 commit network
 EOI
