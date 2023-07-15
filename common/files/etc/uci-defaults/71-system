@@ -6,6 +6,11 @@ if [ ! -z $OP_ROOT_PASSWORD ]; then
   (echo "$OP_ROOT_PASSWORD"; sleep 1; echo "$OP_ROOT_PASSWORD") | passwd > /dev/null
 fi
 
+uci batch << EOI
+set system.@system[0].hostname="$OP_HOSTNAME"
+commit system
+EOI
+
 # reboot every night
 cat << EOF > /etc/crontabs/root
 39 18 * * * sleep 130 && touch /etc/banner && reboot

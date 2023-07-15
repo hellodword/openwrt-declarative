@@ -3,28 +3,33 @@
 ```sh
 . ap/.env
 
-docker pull "openwrt/imagebuilder:$BUILD_TAG"
+docker pull "openwrt/imagebuilder:$OP_BUILD_TAG"
 
-mkdir "$BUILD_TYPE/bin"
+mkdir "$OP_BUILD_TYPE/bin"
 
 docker run --rm \
-    -v "$(pwd)/$BUILD_TYPE/bin":"/builder/bin" \
-    -v "$(pwd)/$BUILD_TYPE/files":"/builder/custom-files" \
+    -v "$(pwd)/$OP_BUILD_TYPE/bin":"/builder/bin" \
+    -v "$(pwd)/$OP_BUILD_TYPE/files":"/builder/custom-files" \
     -v "$(pwd)/common/files":"/builder/common-files" \
-    -v "$(pwd)/$BUILD_TYPE/.env":"/builder/.env":ro \
+    -v "$(pwd)/$OP_BUILD_TYPE/.env.${OP_HOSTNAME}":"/builder/.env":ro \
     -v "$(pwd)/build.sh":"/builder/build.sh":ro \
-    "openwrt/imagebuilder:$BUILD_TAG" \
+    "openwrt/imagebuilder:$OP_BUILD_TAG" \
         bash /builder/build.sh
 
 docker run --rm \
     -it \
-    -v "$(pwd)/$BUILD_TYPE/bin":"/builder/bin" \
-    -v "$(pwd)/$BUILD_TYPE/files":"/builder/custom-files" \
+    -v "$(pwd)/$OP_BUILD_TYPE/bin":"/builder/bin" \
+    -v "$(pwd)/$OP_BUILD_TYPE/files":"/builder/custom-files" \
     -v "$(pwd)/common/files":"/builder/common-files" \
-    -v "$(pwd)/$BUILD_TYPE/.env":"/builder/.env":ro \
+    -v "$(pwd)/$OP_BUILD_TYPE/.env.${OP_HOSTNAME}":"/builder/.env":ro \
     -v "$(pwd)/build.sh":"/builder/build.sh":ro \
-    "openwrt/imagebuilder:$BUILD_TAG" \
+    "openwrt/imagebuilder:$OP_BUILD_TAG" \
         bash
+
+
+# scp -O /path/to/sysupgrade.bin root@<...>:/tmp/sysupgrade.bin
+# ssh root@<...>
+# sysupgrade -u -n -p -v /tmp/sysupgrade.bin
 ```
 
 - [ap](./ap): 双频，单网口，OpenWrt 默认没有 wan 口、没有 switch

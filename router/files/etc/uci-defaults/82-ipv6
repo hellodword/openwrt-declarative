@@ -1,0 +1,47 @@
+set -x
+
+# 光猫 WAN 侧前缀的获取方式为 DHCPv6-PD，通过通告方式获取 IP
+# 光猫 LAN 侧开启了 DHCPv6 Server 和路由通告，分配方式为 SLAAC，禁用了 ULA
+# curl --resolve www.taobao.com:443:[2602:ffe4:c45:0:3::3f9] https://www.taobao.com/robots.txt
+
+######################################
+uci batch << EOI
+del network.globals.ula_prefix
+commit network
+
+set dhcp.lan.dhcpv6='relay'
+set dhcp.lan.ra='relay'
+set dhcp.lan.ndp='relay'
+set dhcp.wan6=dhcp
+set dhcp.wan6.interface='wan6'
+set dhcp.wan6.master='1'
+set dhcp.wan6.ignore='1'
+set dhcp.wan6.dhcpv6='relay'
+set dhcp.wan6.ra='relay'
+set dhcp.wan6.ndp='relay'
+commit dhcp
+EOI
+
+# uci batch << EOI
+# set firewall.allow_ssh=rule
+# set firewall.allow_ssh.name='allow_ssh'
+# add_list firewall.allow_ssh.proto='tcp'
+# set firewall.allow_ssh.src='wan'
+# set firewall.allow_ssh.dest='lan'
+# set firewall.allow_ssh.dest_port='22'
+# set firewall.allow_ssh.target='ACCEPT'
+# set firewall.allow_ssh.family='ipv6'
+# commit firewall
+# EOI
+
+uci batch << EOI
+set firewall.allow_wireguard=rule
+set firewall.allow_wireguard.name='allow_wireguard'
+add_list firewall.allow_wireguard.proto='udp'
+set firewall.allow_wireguard.src='wan'
+set firewall.allow_wireguard.dest='lan'
+set firewall.allow_wireguard.dest_port='51820'
+set firewall.allow_wireguard.target='ACCEPT'
+set firewall.allow_wireguard.family='ipv6'
+commit firewall
+EOI

@@ -23,4 +23,3 @@ uci set system.wps.trigger='none'
 uci set system.wps.default='0'
 
 uci commit system
-

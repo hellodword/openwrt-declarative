@@ -1,0 +1,92 @@
+set -x
+
+. /root/.env
+
+wifi_enable() {
+  local cfg="$1"
+
+  uci set wireless.$cfg.disabled='0'
+}
+
+wifi_roaming_device() {
+  local cfg="$1"
+
+  uci set wireless.$cfg.cell_density='0'
+}
+
+wifi_roaming_interface() {
+  local cfg="$1"
+
+  uci set wireless.$cfg.ieee80211r='1'
+  uci set wireless.$cfg.ft_over_ds='0'
+  uci set wireless.$cfg.ft_psk_generate_local='1'
+}
+
+####################
+
+wifi_setup_default() {
+  local cfg="$1"
+  local ssid="$2"
+  local psk="$3"
+  local roaming="$4"
+
+  if [[ "$cfg" =~ "default_" ]]; then
+    uci set wireless.$cfg.ssid="$ssid"
+    uci set wireless.$cfg.key="$psk"
+    uci set wireless.$cfg.encryption="psk2"
+
+    wifi_enable "$cfg"
+    local device="$(uci get wireless.$cfg.device)"
+    wifi_enable "$device"
+
+    if [ "$roaming" = "true" ]; then
+      wifi_roaming_device "$device"
+      wifi_roaming_interface "$cfg"
+    fi
+  fi
+}
+
+wifi_set_custom() {
+  local cfg="$1"
+  local ssid="$2"
+  local psk="$3"
+  local tag="$4"
+  local band="$5"
+  local isolate="$6"
+  local roaming="$7"
+
+  if [ "$(uci get wireless.$cfg.band)" == "$band" ]; then
+    uci set wireless."wireless_${tag}_${band}"=wifi-iface
+    uci set wireless."wireless_${tag}_${band}".device="$cfg"
+    # uci set wireless."wireless_${tag}_${band}".network="$(uci get wireless.default_$cfg.network)"
+    uci set wireless."wireless_${tag}_${band}".mode='ap'
+    uci set wireless."wireless_${tag}_${band}".guest='1'
+    uci set wireless."wireless_${tag}_${band}".isolate="$isolate"
+    uci set wireless."wireless_${tag}_${band}".disabled='0'
+    uci set wireless."wireless_${tag}_${band}".ssid="$ssid"
+    uci set wireless."wireless_${tag}_${band}".encryption='psk2'
+    uci set wireless."wireless_${tag}_${band}".key="$psk"
+
+    if [ "$roaming" = "true" ]; then
+      wifi_roaming_device "$cfg"
+      wifi_roaming_interface "wireless_${tag}_${band}"
+    fi
+  fi
+}
+
+#######################################
+
+config_load wireless
+
+config_foreach wifi_setup_default wifi-iface "$OP_WIRELESS_SSID" "$OP_WIRELESS_PASSWORD" "$OP_WIRELESS_ROAMING"
+
+if [ ! -z "$OP_WIRELESS_GUEST_SSID" ]; then
+  config_foreach wifi_set_custom wifi-device "$OP_WIRELESS_GUEST_SSID" "$OP_WIRELESS_GUEST_PASSWORD" "guest" "2g" "0" "$OP_WIRELESS_GUEST_ROAMING"
+  # config_foreach wifi_set_custom wifi-device "$OP_WIRELESS_GUEST_SSID" "$OP_WIRELESS_GUEST_PASSWORD" "guest" "5g" "0" "$OP_WIRELESS_GUEST_ROAMING"
+fi
+
+if [ ! -z "$OP_WIRELESS_IOT_SSID" ]; then
+  config_foreach wifi_set_custom wifi-device "$OP_WIRELESS_IOT_SSID" "$OP_WIRELESS_IOT_PASSWORD" "iot" "2g" "1" "false"
+fi
+
+uci commit wireless

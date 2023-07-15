@@ -1,0 +1,21 @@
+set -x
+
+. /root/.env
+
+if [ -n "$OP_DUMP_AP" ]; then
+  config_load dhcp
+  uci del dhcp.lan.ra_slaac
+  uci set dhcp.lan.ignore='1'
+  uci commit dhcp
+
+  config_load network
+  uci set network.lan.ipaddr="${OP_LAN_IP_PREFIX}.1.${OP_DUMP_AP}"
+  uci set network.lan.gateway="${OP_LAN_IP_PREFIX}.1.1"
+  # uci add_list network.lan.dns="${OP_LAN_IP_PREFIX}.1.1"
+  uci commit network
+
+  # # dumpap
+  # rm -f /etc/init.d/odhcpd
+  # rm -f /etc/init.d/firewall
+  # rm -f /etc/init.d/dnsmasq
+fi

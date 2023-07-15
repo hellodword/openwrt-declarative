@@ -9,21 +9,19 @@ if [ -n "$OP_LAN_IP_PREFIX" ]; then
 fi
 
 ######################################
-wifi_remove_default_2_4g() {
+wifi_remove_default_2g() {
   local cfg="$1"
 
   device="$(uci get wireless.$cfg.device)"
 
-  if [ "$(uci get wireless.$device.band)" == "2g" ]; then
-    if [[ "$cfg" =~ "default_" ]]; then
-      uci del wireless."$cfg"
-    fi
+  if [ "$cfg" == "2g" ]; then
+    uci del wireless."default_$cfg"
   fi
 }
 
 
 config_load wireless
-config_foreach wifi_remove_default_2_4g wifi-iface
+config_foreach wifi_remove_default_2g wifi-device
 uci commit wireless
 ######################################
 uci batch << EOI
