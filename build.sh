@@ -57,7 +57,6 @@ all_packages="-dnsmasq openssl-util"
 if [ -z "${OP_DUMP_AP}" ]; then
     all_packages="$all_packages dnsmasq-full luci luci-compat luci-lib-ipkg luci-app-opkg luci-theme-bootstrap luci-lib-base luci-app-firewall"
 else
-    # TODO remove luci/dropbear/dnsmasq/firewall/dhcp packages from dumpap
     all_packages="$all_packages -uhttpd"
     all_packages="$all_packages -firewall -firewall4"
     all_packages="$all_packages -odhcp6c -odhcpd -odhcpd-ipv6only"

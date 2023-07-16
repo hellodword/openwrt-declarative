@@ -37,6 +37,24 @@ docker run --rm \
 - [travel](./travel): 双频，三网口
 - [onu](./onu): 光猫
 
+## debug
+
+- 修改前备份 `/etc/config`，设置 cron job，减少搞挂刷机的次数
+
+```
+# crontab -e
+*/3 * * * * (wget -q -O- --timeout=3 "https://223.5.5.5/resolve?name=example.com&type=AAAA" || wget -q -O- --timeout=3 "https://223.5.5.5/resolve?name=example.com&type=AAAA") || (cp /root/network /etc/config/network; reboot)
+```
+
+- tftp
+
+```
+tftp 192.168.1.1
+> binary
+> put factory.img
+> quit
+```
+
 ---
 
 - https://github.com/mwarning/openwrt-examples/blob/51af905de23df41f6024e81aef14a892e5ef8ef6/README.md#automatic-and-generic-wifi-setup

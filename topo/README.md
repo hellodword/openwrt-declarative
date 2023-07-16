@@ -70,6 +70,39 @@
   - TV: 我很希望让它能访问 NAS 或者可以连手机、游戏机，但还是觉得危险，暂时这样
 - IPv6: 白名单机制，仅允许指定设备的部分用途，默认不使用
 
+## 要解决的问题
+
+- [x] routerA 上可以指定对应 VLAN 内 IPv4 only
+
+  - 对应的 gateway 别开 DHCPv6
+  - 防火墙 drop 对应 zone 的 IPv6 流量
+
+- [x] routerA 上可以让指定 Wi-Fi 和网口在同一 VLAN
+
+  - `Network - Switch` 内添加 VLAN，设定对应网口
+  - `Network - Interfaces - Devices` 里添加 `Bridge device`
+
+- IPv6
+
+  - [x] Router A 的 wan6 和 lan 全部设置为 IPv6 Relay Mode，下游设备就能正常使用 IPv6
+  - [ ] Router A 的 wan6 显示有 IPv6-PD，IPv6 Server Mode 时下游设备能分配到 IPv6，但是无法连通
+  - [ ] 固定下游设备的 IPv6 后缀
+
+- 暴露 IPv6 端口
+
+  - [x] 设定 lan zone 里所有设备的特定端口: `Firewall - Traffic Rules`， wan => lan
+  - [ ] 暴露特定设备/后缀的 IPv6 端口
+
+- [x] 让 dump AP (routerB/C) 也支持 guest wifi
+
+  - routerA 的 VLAN 1 设定 tagged，VLAN 3 设定 untagged
+  - routerB/C 添加 VLAN 3
+
+- 防火墙
+  - [x] 禁止非信任区访问 OpenWrt 和光猫管理页面或 ssh
+  - [ ] 防止光猫其余端口被访问，设定白名单端口
+  - [ ] 设计调试、分析危险区设备流量的流程
+
 ---
 
 - https://www.youtube.com/playlist?list=PLjNJONm8Mjpf9g8xK0wJSFLIFrl8GMhVZ

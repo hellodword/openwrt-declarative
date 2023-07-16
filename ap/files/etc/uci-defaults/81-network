@@ -41,3 +41,31 @@ uci commit network
 # set wireless.wireless_guest_5g.network='guest'
 # commit wireless
 # EOI
+
+uci batch << EOI
+set network.switch_vlan_guest=switch_vlan
+set network.switch_vlan_guest.description='guest'
+set network.switch_vlan_guest.device='lan'
+set network.switch_vlan_guest.vlan='3'
+set network.switch_vlan_guest.vid='3'
+set network.switch_vlan_guest.ports='0t 4t'
+commit network
+
+set network.br_guest=device
+set network.br_guest.type='bridge'
+set network.br_guest.name='br-guest'
+set network.br_guest.ports='lan.3'
+commit network
+
+set network.guest=interface
+set network.guest.proto='static'
+set network.guest.device='br-guest'
+set network.guest.netmask='255.255.255.0'
+set network.guest.ipaddr="${OP_LAN_IP_PREFIX}.3.${OP_DUMP_AP}"
+set network.guest.gateway="${OP_LAN_IP_PREFIX}.3.1"
+commit network
+
+set wireless.wireless_guest_2g.network='guest'
+set wireless.wireless_guest_5g.network='guest'
+commit wireless
+EOI

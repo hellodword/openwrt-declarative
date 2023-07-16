@@ -10,8 +10,8 @@ fi
 
 ######################################
 uci batch << EOI
-set network.switch_vlan_ap.description='LAN and home wifi'
 set network.@switch_vlan[0].vlan='1'
+set network.@switch_vlan[0].description='LAN and home wifi'
 set network.@switch_vlan[0].vid='1'
 set network.@switch_vlan[0].ports='3 4 6t'
 
@@ -19,15 +19,15 @@ set network.@switch_vlan[1].vlan='2'
 set network.@switch_vlan[1].vid='2'
 set network.@switch_vlan[1].ports='0t 5'
 
-set network.switch_vlan_guest.description='guest'
 set network.switch_vlan_guest=switch_vlan
+set network.switch_vlan_guest.description='guest'
 set network.switch_vlan_guest.device='switch0'
 set network.switch_vlan_guest.vlan='3'
 set network.switch_vlan_guest.vid='3'
-set network.switch_vlan_guest.ports='6t'
+set network.switch_vlan_guest.ports='3t 4t 6t'
 
-set network.switch_vlan_iot.description='iot'
 set network.switch_vlan_iot=switch_vlan
+set network.switch_vlan_iot.description='iot'
 set network.switch_vlan_iot.device='switch0'
 set network.switch_vlan_iot.vlan='4'
 set network.switch_vlan_iot.vid='4'
