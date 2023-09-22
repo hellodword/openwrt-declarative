@@ -62,7 +62,7 @@
 ```
 
 - ONT: 光猫
-- routerB/routerC: 目前是配置静态 IP，关闭 DHCP，配置相同 SSID，当作 dumpAP
+- routerB/routerC: 目前是配置静态 IP，关闭 DHCP，配置相同 SSID，当作 dumbAP
 - Z1: 信任区，VLAN 1，IPv4+IPv6，不隔离，可以直接访问路由器或者光猫
   - VPN: 通过公网 IPv6 对外提供服务，包括但不限于 wireguard/tailscale/openvpn
 - Z2: 访客区，VLAN 3，仅 IPv4，VLAN 局域网内可以互相访问，禁止直接访问路由器或者光猫
@@ -93,7 +93,7 @@
   - [x] 设定 lan zone 里所有设备的特定端口: `Firewall - Traffic Rules`， wan => lan
   - [ ] 暴露特定设备/后缀的 IPv6 端口
 
-- [x] 让 dump AP (routerB/C) 也支持 guest wifi
+- [x] 让 dumb AP (routerB/C) 也支持 guest wifi
 
   - routerA 的 VLAN 1 设定 tagged，VLAN 3 设定 untagged
   - routerB/C 添加 VLAN 3
@@ -102,6 +102,7 @@
   - [x] 禁止非信任区访问 OpenWrt 和光猫管理页面或 ssh
   - [ ] 防止光猫其余端口被访问，设定白名单端口
   - [ ] 设计调试、分析危险区设备流量的流程
+  - [ ] IPv6 出站仅用于爱国连接
 
 ---
 

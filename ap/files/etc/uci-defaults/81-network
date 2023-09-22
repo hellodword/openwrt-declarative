@@ -9,7 +9,7 @@ uci set dhcp.lan.ignore='1'
 uci commit dhcp
 
 config_load network
-uci set network.lan.ipaddr="${OP_LAN_IP_PREFIX}.1.${OP_DUMP_AP}"
+uci set network.lan.ipaddr="${OP_LAN_IP_PREFIX}.1.${OP_DUMB_AP}"
 uci set network.lan.gateway="${OP_LAN_IP_PREFIX}.1.1"
 # uci add_list network.lan.dns="${OP_LAN_IP_PREFIX}.1.1"
 uci commit network
@@ -31,7 +31,7 @@ uci commit network
 # set network.guest=interface
 # set network.guest.proto='static'
 # set network.guest.device='br-lan.3'
-# set network.guest.ipaddr='${OP_LAN_IP_PREFIX}.3.${OP_DUMP_AP}'
+# set network.guest.ipaddr='${OP_LAN_IP_PREFIX}.3.${OP_DUMB_AP}'
 # set network.guest.netmask='255.255.255.0'
 # set network.guest.gateway='${OP_LAN_IP_PREFIX}.3.1'
 # set network.guest.type='bridge'
@@ -61,7 +61,7 @@ set network.guest=interface
 set network.guest.proto='static'
 set network.guest.device='br-guest'
 set network.guest.netmask='255.255.255.0'
-set network.guest.ipaddr="${OP_LAN_IP_PREFIX}.3.${OP_DUMP_AP}"
+set network.guest.ipaddr="${OP_LAN_IP_PREFIX}.3.${OP_DUMB_AP}"
 set network.guest.gateway="${OP_LAN_IP_PREFIX}.3.1"
 commit network
 

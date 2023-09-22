@@ -54,7 +54,7 @@ sed -i '/CONFIG_VHDX_IMAGES/ c\# CONFIG_VHDX_IMAGES is not set' .config
 # base packages
 all_packages="-dnsmasq openssl-util"
 
-if [ -z "${OP_DUMP_AP}" ]; then
+if [ -z "${OP_DUMB_AP}" ]; then
     all_packages="$all_packages dnsmasq-full luci luci-compat luci-lib-ipkg luci-app-opkg luci-theme-bootstrap luci-lib-base luci-app-firewall"
 else
     all_packages="$all_packages -uhttpd"

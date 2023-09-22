@@ -1,0 +1,7 @@
+set -x
+
+. /root/.env
+
+config_load network
+uci set network.lan.ipaddr="${OP_LAN_IP_PREFIX}.100.1"
+uci commit network
