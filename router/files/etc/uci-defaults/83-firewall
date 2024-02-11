@@ -53,24 +53,24 @@ add_list firewall.drop_ont_admin_guest.proto='tcp'
 commit firewall
 EOI
 
-uci batch << EOI
-set firewall.drop_ipv6_iot=rule
-set firewall.drop_ipv6_iot.name='drop_ipv6_iot'
-set firewall.drop_ipv6_iot.src='iot'
-set firewall.drop_ipv6_iot.dest='*'
-set firewall.drop_ipv6_iot.target='DROP'
-add_list firewall.drop_ipv6_iot.proto='all'
-set firewall.drop_ipv6_iot.family='ipv6'
-commit firewall
-EOI
+# uci batch << EOI
+# set firewall.drop_ipv6_iot=rule
+# set firewall.drop_ipv6_iot.name='drop_ipv6_iot'
+# set firewall.drop_ipv6_iot.src='iot'
+# set firewall.drop_ipv6_iot.dest='*'
+# set firewall.drop_ipv6_iot.target='DROP'
+# add_list firewall.drop_ipv6_iot.proto='all'
+# set firewall.drop_ipv6_iot.family='ipv6'
+# commit firewall
+# EOI
 
-uci batch << EOI
-set firewall.drop_ipv6_guest=rule
-set firewall.drop_ipv6_guest.name='drop_ipv6_guest'
-set firewall.drop_ipv6_guest.src='guest'
-set firewall.drop_ipv6_guest.dest='*'
-set firewall.drop_ipv6_guest.target='DROP'
-add_list firewall.drop_ipv6_guest.proto='all'
-set firewall.drop_ipv6_guest.family='ipv6'
-commit firewall
-EOI
+# uci batch << EOI
+# set firewall.drop_ipv6_guest=rule
+# set firewall.drop_ipv6_guest.name='drop_ipv6_guest'
+# set firewall.drop_ipv6_guest.src='guest'
+# set firewall.drop_ipv6_guest.dest='*'
+# set firewall.drop_ipv6_guest.target='DROP'
+# add_list firewall.drop_ipv6_guest.proto='all'
+# set firewall.drop_ipv6_guest.family='ipv6'
+# commit firewall
+# EOI

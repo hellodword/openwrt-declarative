@@ -45,3 +45,23 @@ set firewall.allow_wireguard.target='ACCEPT'
 set firewall.allow_wireguard.family='ipv6'
 commit firewall
 EOI
+
+uci batch << EOI
+set dhcp.guest.dhcpv6='relay'
+set dhcp.guest.ra='relay'
+set dhcp.guest.ndp='relay'
+set dhcp.guest.ra_slaac='1'
+add_list dhcp.guest.ra_flags='managed-config'
+add_list dhcp.guest.ra_flags='other-config'
+commit dhcp
+EOI
+
+uci batch << EOI
+set dhcp.iot.dhcpv6='relay'
+set dhcp.iot.ra='relay'
+set dhcp.iot.ndp='relay'
+set dhcp.iot.ra_slaac='1'
+add_list dhcp.iot.ra_flags='managed-config'
+add_list dhcp.iot.ra_flags='other-config'
+commit dhcp
+EOI
